@@ -17,7 +17,6 @@ class Person(Base):
     default_configured_drink_id = Column(Integer, default=None)
     email = Column(Unicode(128), unique=True, nullable=False )
 
-
     def __init__(self, first_name, last_name, email,
                   default_configured_drink_id=None):
         self.first_name = first_name
@@ -35,6 +34,7 @@ class Person(Base):
         return session.query(Drink).filter(Drink.id == self.default_configured_drink_id).first()
     
     def get_default_configured_drink_name(self):
+        return get_default_configured_drink().name
 
     def set_default_configured_drink(self, drink_name):
         session = object_session(self) 
@@ -42,9 +42,6 @@ class Person(Base):
         if target_drink is None:
             target_drink = new_drink(session, drink_name)
             self.default_configured_drink_id = target_drink.id
-
-    
-
 
 class Person_Group_Association(Base):
         __tablename__ = 'person_group_association'
@@ -121,6 +118,8 @@ def make_session():
     engine = create_engine('postgresql://postgres:docker@localhost:5432/postgres')
     Session = sessionmaker(bind=engine)
     return Session()
+
+
 
 
 

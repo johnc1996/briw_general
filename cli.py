@@ -1,6 +1,7 @@
 import json
 import sys
 import re
+import model
 
 # Global
 
@@ -55,6 +56,7 @@ def get_people_id_by_name(name):
 
 def get_people_name_by_id(id):
     return persist_dict['people'][id]
+
 
 def get_people_id_by_name(name):
     people_id = None
@@ -213,19 +215,16 @@ def get_args():
     if arg_count > max_arg_count - 1:
         print('Input failed :Argument count greater than %s' % arg_count)
         exit()
-    elif arg_count ==2:
+    elif arg_count ==1:
         mode = 'interactive'
     else:
         mode = args[1]
 
     return mode
 
-
-
-
 persist_dict = read_persist_file()
-
 mode = get_args()
+session = model.make_session()
 
 if mode == 'interactive':
     while True:
