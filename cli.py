@@ -10,27 +10,35 @@ persist_file_path = 'persist.json'
 persist_dict = {}
 
 mode_verbs = ['get', 'add', 'read', 'write']
-modes_expected = ['get-people', 'get-drinks', 'get-favourites', 'add-drinks', 'add-people', 'add-favourites', 'read-json', 'write-json']
-border = 20*"=" +'\n'
+modes_expected = ['get-people', 'get-drinks', 'get-favourites', 'add-drinks', 'add-people', 'add-favourites',
+                  'read-json', 'write-json']
+border = 20*"=" + '\n'
 
-max_arg_count = 2 # user specified
+# user specified
+max_arg_count = 2
+
 
 def read_persist_file():
     with open(persist_file_path, 'r') as fh:
-         return json.load(fh)
+        return json.load(fh)
+
 
 def write_persist_file():
     with open(persist_file_path, 'w') as fh:
-         return json.dump(persist_dict, fh)    
+        return json.dump(persist_dict, fh)
+
 
 def print_header(header_str):
     print(f"{border}{header_str}\n{border}")
 
+
 def print_row(row_data):
     print(f"|    {row_data}\n")
 
+
 def print_footer():
     print(border)
+
 
 def print_table(table_name):
     print_header(table_name)
@@ -38,6 +46,7 @@ def print_table(table_name):
         row_data = key + "    " + data_item
         print_row(row_data)
     print_footer()
+
 
 def print_favourites():
     table_name = "favourites"
@@ -47,12 +56,14 @@ def print_favourites():
         print_row(row_data)
     print_footer()
 
+
 def get_people_id_by_name(name):
     people_id = None
     for table_id, table_name in persist_dict['people'].items():
         if table_name == name:
             people_id = table_id
     return people_id
+
 
 def get_people_name_by_id(id):
     return persist_dict['people'][id]
@@ -65,8 +76,10 @@ def get_people_id_by_name(name):
             people_id = table_id
     return people_id
 
+
 def get_drink_name_by_id(id):
     return persist_dict['drinks'][id]
+
 
 def get_drink_id_by_name(name):
     drink_id = None
@@ -74,6 +87,7 @@ def get_drink_id_by_name(name):
         if table_name == name:
             drink_id = table_id
     return drink_id
+
 
 def get_new_key(table):
     max_key = 1
@@ -84,6 +98,7 @@ def get_new_key(table):
     max_key = max_key + 1
     return str(max_key)
 
+
 def set_new_person(name):
     has_set = False
     if get_people_id_by_name(name) is None:
@@ -92,12 +107,14 @@ def set_new_person(name):
         has_set = True
     return has_set
 
+
 def get_data_id_by_name(table_name, name):
     primary_id = None
     for table_id, table_name in persist_dict[table_name].items():
         if table_name == name:
             primary_id = table_id
     return primary_id
+
 
 def set_new_generic(table_name, data_item):
     has_set = False
@@ -107,6 +124,7 @@ def set_new_generic(table_name, data_item):
         has_set = True
     return has_set       
 
+
 def set_new_drink(name):
     has_set = False
     if get_drink_id_by_name(name) is None:
@@ -115,10 +133,12 @@ def set_new_drink(name):
         has_set = True
     return has_set
 
+
 def set_favourite(person, drink):
     person_id = get_people_id_by_name(person)
     drink_id = get_drink_id_by_name(drink)
     persist_dict['favourites'][person_id] = drink_id
+
 
 def print_interactive_msg():
     msg_interactive = """
@@ -133,15 +153,17 @@ def print_interactive_msg():
         print("[%s] - %s " % (int(mode_integer), mode))
         mode_integer += 1
 
+
 def validate_interactive_input(mode_integers):
-    #TODO
+    # TODO
     valid = True
     return valid
+
 
 def clean_input(in_str):
     in_str = in_str.strip()
     in_str = in_str.lower()
-    in_str = re.sub("[^a-zA-Z0-9\-\ ]", "")
+    in_str = re.sub("[^a-zA-Z0-9\-\ ]", int_str)
     return in_str
    
 
@@ -149,9 +171,9 @@ def method_handler(mode):
     current_verb = mode.split('-')[0]
     current_data = mode.split('-')[-1]
 
-    if current_verb =='read':
+    if current_verb == 'read':
         persist_dict = read_persist_file()
-    elif current_verb =='write':
+    elif current_verb == 'write':
         write_persist_file()
     elif current_verb == 'get':
         print_table(current_data)
@@ -171,6 +193,7 @@ def method_handler(mode):
     
     write_persist_file() # force write
 
+
 def validate_cli_input():   
     is_interactive = False
     """
@@ -187,6 +210,7 @@ def validate_cli_input():
         print('Input failed :Argument count greater than %s' % arg_count)
         exit()
 
+
 def sanitise_cli_input():
     pass
 
@@ -195,9 +219,9 @@ def sanitise():
     # clean/sanitise
     pass
 
+
 def is_valid_mode():
     is_valid = False
-
 
 
 def get_args():
@@ -215,12 +239,13 @@ def get_args():
     if arg_count > max_arg_count - 1:
         print('Input failed :Argument count greater than %s' % arg_count)
         exit()
-    elif arg_count ==1:
+    elif arg_count == 1:
         mode = 'interactive'
     else:
         mode = args[1]
 
     return mode
+
 
 persist_dict = read_persist_file()
 mode = get_args()
@@ -244,5 +269,3 @@ if mode == 'interactive':
             break
 else:
     method_handler(mode)
-
-
